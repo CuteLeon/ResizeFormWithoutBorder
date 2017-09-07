@@ -28,62 +28,75 @@ namespace ResizeFormWithoutBorderViaMouse
         #region 复写消息处理函数 WndProc
         protected override void WndProc(ref Message Msg)
         {
-            if (Msg.Msg == WM_NCHITTEST)
+            switch (Msg.Msg)
             {
-                //获取鼠标位置
-                int nPosX = (Msg.LParam.ToInt32() & 65535);
-                int nPosY = (Msg.LParam.ToInt32() >> 16);
-                //右下角
-                if (nPosX >= this.Right - 6 && nPosY >= this.Bottom - 6)
-                {
-                    Msg.Result = new IntPtr(HT_BOTTOMRIGHT);
-                    return;
-                }
-                //左上角
-                else if (nPosX <= this.Left + 6 && nPosY <= this.Top + 6)
-                {
-                    Msg.Result = new IntPtr(HT_TOPLEFT);
-                    return;
-                }
-                //左下角
-                else if (nPosX <= this.Left + 6 && nPosY >= this.Bottom - 6)
-                {
-                    Msg.Result = new IntPtr(HT_BOTTOMLEFT);
-                    return;
-                }
-                //右上角
-                else if (nPosX >= this.Right - 6 && nPosY <= this.Top + 6)
-                {
-                    Msg.Result = new IntPtr(HT_TOPRIGHT);
-                    return;
-                }
-                else if (nPosX >= this.Right - 2)
-                {
-                    Msg.Result = new IntPtr(HT_RIGHT);
-                    return;
-                }
-                else if (nPosY >= this.Bottom - 2)
-                {
-                    Msg.Result = new IntPtr(HT_BOTTOM);
-                    return;
-                }
-                else if (nPosX <= this.Left + 2)
-                {
-                    Msg.Result = new IntPtr(HT_LEFT);
-                    return;
-                }
-                else if (nPosY <= this.Top + 2)
-                {
-                    Msg.Result = new IntPtr(HT_TOP);
-                    return;
-                }
-                else
-                {
-                    Msg.Result = new IntPtr(HT_CAPTION);
-                    return;
-                }
+                //鼠标拖动改变大小
+                case WM_NCHITTEST:
+                    {
+                        // 获取鼠标位置
+                        int nPosX = (Msg.LParam.ToInt32() & 65535);
+                        int nPosY = (Msg.LParam.ToInt32() >> 16);
+
+                        if (nPosX >= this.Right - 6 && nPosY >= this.Bottom - 6)
+                        {
+                            //右下角
+                            Msg.Result = new IntPtr(HT_BOTTOMRIGHT);
+                        }
+                        else if (nPosX <= this.Left + 6 && nPosY <= this.Top + 6)
+                        {
+                            //左上角
+                            Msg.Result = new IntPtr(HT_TOPLEFT);
+                        }
+                        else if (nPosX <= this.Left + 6 && nPosY >= this.Bottom - 6)
+                        {
+                            //左下角
+                            Msg.Result = new IntPtr(HT_BOTTOMLEFT);
+                        }
+                        else if (nPosX >= this.Right - 6 && nPosY <= this.Top + 6)
+                        {
+                            //右上角
+                            Msg.Result = new IntPtr(HT_TOPRIGHT);
+                        }
+                        else if (nPosX >= this.Right - 2)
+                        {
+                            //右边框
+                            Msg.Result = new IntPtr(HT_RIGHT);
+                        }
+                        else if (nPosY >= this.Bottom - 2)
+                        {
+                            //底边框
+                            Msg.Result = new IntPtr(HT_BOTTOM);
+                        }
+                        else if (nPosX <= this.Left + 2)
+                        {
+                            //左边框
+                            Msg.Result = new IntPtr(HT_LEFT);
+                        }
+                        else if (nPosY <= this.Top + 2)
+                        {
+                            //上边框
+                            Msg.Result = new IntPtr(HT_TOP);
+                        }
+                        else if (nPosY <= this.Left + 20)
+                        {
+                            //上方 2~20 像素作为标题栏拖动
+                            Msg.Result = new IntPtr(HT_CAPTION);
+                        }
+                        /*
+                        else
+                        {
+                            //其他区域返回拖动标题栏消息
+                            Msg.Result = new IntPtr(HT_CAPTION);
+                        }
+                        */
+                        break;
+                    }
+                default:
+                    {
+                        base.WndProc(ref Msg);
+                        break;
+                    }
             }
-            base.WndProc(ref Msg);
         }
         #endregion
 
