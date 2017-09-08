@@ -106,7 +106,7 @@ namespace ResizeFormWithoutBorderViaMouse
             System.Drawing.Drawing2D.GraphicsPath FormPath;
             FormPath = new System.Drawing.Drawing2D.GraphicsPath();
             Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
-            FormPath = GetRoundedRectPath(rect, 10);
+            FormPath = GetRoundedRectPath(rect, 7);
             this.Region = new Region(FormPath);
 
         }
@@ -132,6 +132,19 @@ namespace ResizeFormWithoutBorderViaMouse
             path.AddArc(arcRect, 90, 90);
             path.CloseFigure();//闭合曲线
             return path;
+        }
+        #endregion
+
+        #region 为窗体添加阴影
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams expr_06 = base.CreateParams;
+                expr_06.ClassStyle |= 131072;
+                expr_06.ExStyle |= 33554432;
+                return expr_06;
+            }
         }
         #endregion
 
