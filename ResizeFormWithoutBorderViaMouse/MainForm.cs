@@ -33,6 +33,8 @@ namespace ResizeFormWithoutBorderViaMouse
                 //鼠标拖动改变大小
                 case WM_NCHITTEST:
                     {
+                        if (this.WindowState == FormWindowState.Maximized) return;
+
                         // 获取鼠标位置
                         int nPosX = (Msg.LParam.ToInt32() & 65535);
                         int nPosY = (Msg.LParam.ToInt32() >> 16);
